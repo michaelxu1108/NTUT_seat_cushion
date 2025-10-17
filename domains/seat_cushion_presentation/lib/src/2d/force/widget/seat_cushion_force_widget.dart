@@ -40,6 +40,9 @@ class SeatCushionForceWidget extends StatelessWidget {
     final borderWidth = min(width, height) * 1.0 / 15.0;
     final borderRadius = borderWidth;
 
+    // Convert force from grams to mmHg (1kg = 760mmHg)
+    final forceInMmHg = (force / 1000.0) * 760;
+
     return Container(
       decoration: BoxDecoration(
         color: themeExtension.forceToColor(force),
@@ -51,6 +54,29 @@ class SeatCushionForceWidget extends StatelessWidget {
       ),
       height: height,
       width: width,
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Padding(
+            padding: EdgeInsets.all(borderWidth * 0.5),
+            child: Text(
+              forceInMmHg.toStringAsFixed(0),
+              style: TextStyle(
+                color: _getContrastColor(themeExtension.forceToColor(force)),
+                fontSize: min(width, height) * 0.25,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
     );
+  }
+
+  // Helper function to determine text color based on background brightness
+  Color _getContrastColor(Color backgroundColor) {
+    final luminance = backgroundColor.computeLuminance();
+    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 }

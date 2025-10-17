@@ -30,9 +30,9 @@ class SeatCushionForceColorBar extends StatelessWidget {
         ),
         Row(
           children: [
-            Text((SeatCushion.forceMin / 1000.0).toString()),
+            Text('${(SeatCushion.forceMin / 1000.0 * 760).toStringAsFixed(0)} mmHg'),
             Spacer(),
-            Text((SeatCushion.forceMax / 1000.0).toString()),
+            Text('${(SeatCushion.forceMax / 1000.0 * 760).toStringAsFixed(0)} mmHg'),
           ],
         ),
       ],
