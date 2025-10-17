@@ -6,8 +6,10 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fbp;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:seat_cushion/infrastructure/repository/in_memory.dart';
+import 'package:seat_cushion/infrastructure/sensor/auto_mock_sensor.dart';
 import 'package:seat_cushion/infrastructure/sensor/bluetooth_sensor.dart';
 import 'package:seat_cushion/infrastructure/sensor_decoder/wei_zhe_decoder.dart';
+import 'package:seat_cushion/seat_cushion.dart';
 import 'package:seat_cushion_presentation/seat_cushion_presentation.dart';
 
 import 'init/initializer.dart';
@@ -21,22 +23,44 @@ import 'utils/seat_cushion_file.dart';
 
 late final Initializer initializer;
 
+/// ============================================
+/// MOCK MODE CONFIGURATION
+/// ============================================
+/// Set this to true to use mock data (no Bluetooth device needed)
+/// Set this to false to use real Bluetooth device
+const bool useMockData = true;
+/// ============================================
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Flutter Blue Plus
-  bool fbpIsSupported;
-  try {
-    fbpIsSupported = await fbp.FlutterBluePlus.isSupported;
-  } catch (e) {
+
+  // Create sensor based on mock mode setting
+  final SeatCushionSensor sensor;
+  bool fbpIsSupported = false;
+
+  if (useMockData) {
+    // Use auto-generating mock sensor (no Bluetooth needed)
+    sensor = AutoMockSeatCushionSensor();
     fbpIsSupported = false;
+    print('🎭 Running in MOCK MODE - Using simulated seat cushion data');
+  } else {
+    // Use real Bluetooth sensor
+    try {
+      fbpIsSupported = await fbp.FlutterBluePlus.isSupported;
+    } catch (e) {
+      fbpIsSupported = false;
+    }
+    sensor = BluetoothSeatCushionSensor(
+      decoder: WeiZheDecoder(),
+      fbpIsSupported: fbpIsSupported,
+    );
+    print('📡 Running in BLUETOOTH MODE - Connecting to real device');
   }
+
   initializer = Initializer(
     fbpIsSupported: fbpIsSupported,
     repository: InMemorySeatCushionRepository(),
-    sensor: BluetoothSeatCushionSensor(
-      decoder: WeiZheDecoder(),
-      fbpIsSupported: fbpIsSupported,
-    ),
+    sensor: sensor,
   );
   await initializer();
   runApp(MyApp());
