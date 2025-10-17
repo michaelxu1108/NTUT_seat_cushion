@@ -1,0 +1,33 @@
+name: seat_cushion_presentation_example
+description: "Seat Cushion Presentation Example."
+publish_to: 'none'
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: any
+  provider: any
+
+  # Domains
+  seat_cushion: any
+  seat_cushion_presentation: any
+  
+  # Packages
+  stream_utils: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+resolution: workspace
