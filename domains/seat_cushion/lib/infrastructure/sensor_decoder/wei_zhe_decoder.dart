@@ -19,11 +19,7 @@ import 'template.dart';
 
 @visibleForTesting
 @pragma('vm:notify-debugger-on-exception')
-enum WeiZheDecoderValuesStage {
-  first,
-  second,
-  third,
-}
+enum WeiZheDecoderValuesStage { first, second, third }
 
 class WeiZheDecoder implements SeatCushionSensorDecoder {
   final Map<SeatCushionType, Map<WeiZheDecoderValuesStage, List<int>?>>
@@ -47,17 +43,29 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
   @visibleForTesting
   @pragma('vm:notify-debugger-on-exception')
   SeatCushionType? valuesToSeatCushionType(List<int> values) {
-    if (values.first & 0xF0 == 0x10) return SeatCushionType.right;
-    if (values.first & 0xF0 == 0x20) return SeatCushionType.left;
+    if (values.isEmpty) {
+      print('⚠️ valuesToSeatCushionType: 收到空的數據包');
+      return null;
+    }
+    final header = values.first & 0xF0;
+    if (header == 0x10) return SeatCushionType.right;
+    if (header == 0x20) return SeatCushionType.left;
+    print('⚠️ valuesToSeatCushionType: 未知的設備類型 header=0x${header.toRadixString(16)}');
     return null;
   }
 
   @visibleForTesting
   @pragma('vm:notify-debugger-on-exception')
   WeiZheDecoderValuesStage? valuesToStage(List<int> values) {
-    if (values.first & 0x0F == 0x01) return WeiZheDecoderValuesStage.first;
-    if (values.first & 0x0F == 0x02) return WeiZheDecoderValuesStage.second;
-    if (values.first & 0x0F == 0x03) return WeiZheDecoderValuesStage.third;
+    if (values.isEmpty) {
+      print('⚠️ valuesToStage: 收到空的數據包');
+      return null;
+    }
+    final stage = values.first & 0x0F;
+    if (stage == 0x01) return WeiZheDecoderValuesStage.first;
+    if (stage == 0x02) return WeiZheDecoderValuesStage.second;
+    if (stage == 0x03) return WeiZheDecoderValuesStage.third;
+    print('⚠️ valuesToStage: 未知的階段 stage=0x${stage.toRadixString(16)}');
     return null;
   }
 
@@ -86,10 +94,7 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
 
   @visibleForTesting
   @pragma('vm:notify-debugger-on-exception')
-  int indexToRow({
-    required SeatCushionType type,
-    required int index,
-  }) {
+  int indexToRow({required SeatCushionType type, required int index}) {
     switch (type) {
       case SeatCushionType.left:
         return index ~/ SeatCushion.unitsMaxColumn;
@@ -101,10 +106,7 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
 
   @visibleForTesting
   @pragma('vm:notify-debugger-on-exception')
-  int indexToColumn({
-    required SeatCushionType type,
-    required int index,
-  }) {
+  int indexToColumn({required SeatCushionType type, required int index}) {
     switch (type) {
       case SeatCushionType.left:
         return (SeatCushion.unitsMaxColumn - 1) -
@@ -137,58 +139,90 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
   @override
   Future<void> addValues(List<int> values) async {
     return await _lock.synchronized(() {
-      /// Check the type is valid.
-      final type = valuesToSeatCushionType(values);
-      if (type == null) return;
-
-      /// Check the stage is valid.
-      final stage = valuesToStage(values);
-      if (stage == null) return;
-
-      /// Check the length is valid.
-      final length = stageToLength(stage);
-      if (length != values.length) return;
-
-      /// Update the buffer.
-      _buffer[type]!.update(stage, (_) => values);
-
-      /// Checks whether each stage values of the buffer of this type is ready.
-      final allStageValuesIsNotEmpty = !_buffer[type]!.values.fold(
-        false,
-        (result, values) => result || (values == null),
-      );
-
-      if (allStageValuesIsNotEmpty) {
-        /// Get the force list.
-        final rawForces = valuesToForces(
-          _buffer[type]!.values.expand((e) => e!.skip(1)).toList(),
-        );
-
-        /// Map the force list to 2D-list.
-        final forces = List.generate(SeatCushion.unitsMaxRow, (row) {
-          return List.generate(SeatCushion.unitsMaxColumn, (column) {
-            return rawForces[rowColumnToIndex(
-              type: type,
-              row: row,
-              column: column,
-            )];
-          });
-        });
-
-        /// Get current time.
-        final time = DateTime.now();
-
-        /// Add the seat cushion data to the corresponding stream.
-        switch (type) {
-          case SeatCushionType.left:
-            _leftController.add(LeftSeatCushion(forces: forces, time: time));
-          case SeatCushionType.right:
-            _rightController.add(RightSeatCushion(forces: forces, time: time));
+      try {
+        /// 診斷日誌：顯示收到的原始數據
+        if (values.isNotEmpty) {
+          final header = values.first;
+          print('📦 收到數據包: 長度=${values.length}, header=0x${header.toRadixString(16).padLeft(2, '0')}');
         }
 
-        /// Clear the buffer of this type.
-        for (final stage in WeiZheDecoderValuesStage.values) {
-          _buffer[type]!.update(stage, (_) => null);
+        /// Check the type is valid.
+        final type = valuesToSeatCushionType(values);
+        if (type == null) {
+          print('⚠️ 無法識別設備類型，忽略此數據包');
+          return;
+        }
+
+        /// Check the stage is valid.
+        final stage = valuesToStage(values);
+        if (stage == null) {
+          print('⚠️ 無法識別階段，忽略此數據包');
+          return;
+        }
+
+        /// Check the length is valid.
+        final length = stageToLength(stage);
+        if (length != values.length) {
+          print('⚠️ 數據長度不符: 期望=$length, 實際=${values.length}, 類型=$type, 階段=$stage');
+          return;
+        }
+
+        print('✅ 有效數據包: 類型=$type, 階段=$stage, 長度=${values.length}');
+
+        /// Update the buffer.
+        _buffer[type]!.update(stage, (_) => values);
+
+        /// Checks whether each stage values of the buffer of this type is ready.
+        final allStageValuesIsNotEmpty = _buffer[type]!.values.every(
+          (values) => values != null,
+        );
+
+        if (allStageValuesIsNotEmpty) {
+          print('🎯 所有階段數據已就緒，開始解碼 $type 座墊數據...');
+
+          /// Get the force list.
+          final rawForces = valuesToForces(
+            _buffer[type]!.values.expand((e) => e!.skip(1)).toList(),
+          );
+
+          print('   解碼後力值數量: ${rawForces.length}');
+
+          /// Map the force list to 2D-list.
+          final forces = List.generate(SeatCushion.unitsMaxRow, (row) {
+            return List.generate(SeatCushion.unitsMaxColumn, (column) {
+              return rawForces[rowColumnToIndex(
+                type: type,
+                row: row,
+                column: column,
+              )];
+            });
+          });
+
+          /// Get current time.
+          final time = DateTime.now();
+
+          /// Add the seat cushion data to the corresponding stream.
+          switch (type) {
+            case SeatCushionType.left:
+              print('📤 發送左側座墊數據到 stream');
+              _leftController.add(LeftSeatCushion(forces: forces, time: time));
+            case SeatCushionType.right:
+              print('📤 發送右側座墊數據到 stream');
+              _rightController.add(RightSeatCushion(forces: forces, time: time));
+          }
+
+          /// Clear the buffer of this type.
+          for (final stage in WeiZheDecoderValuesStage.values) {
+            _buffer[type]!.update(stage, (_) => null);
+          }
+        }
+      } catch (e, stackTrace) {
+        print('❌ 解碼數據時發生錯誤:');
+        print('   錯誤: $e');
+        print('   堆疊追蹤: $stackTrace');
+        print('   數據包長度: ${values.length}');
+        if (values.isNotEmpty) {
+          print('   數據包 header: 0x${values.first.toRadixString(16).padLeft(2, '0')}');
         }
       }
     });
@@ -204,16 +238,16 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
       header,
       ...List.generate((length / 2.0).toInt(), (index) {
         /// Force
-        final force = (random.nextDouble() * (SeatCushion.forceMax - SeatCushion.forceMin)) + SeatCushion.forceMin;
-        final forceBytes = (ByteData(2)
-          ..setInt16(0, force.toInt(), Endian.little))
-          .buffer
-          .asUint8List();
+        final force =
+            (random.nextDouble() *
+                (SeatCushion.forceMax - SeatCushion.forceMin)) +
+            SeatCushion.forceMin;
+        final forceBytes = (ByteData(
+          2,
+        )..setInt16(0, force.toInt(), Endian.little)).buffer.asUint8List();
 
-        return [
-          ...forceBytes,
-        ];
-      }).expand((e) => e)
+        return [...forceBytes];
+      }).expand((e) => e),
     ];
   }
 

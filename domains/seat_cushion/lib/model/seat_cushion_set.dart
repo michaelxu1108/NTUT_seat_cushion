@@ -42,11 +42,20 @@ class SeatCushionSet extends Equatable {
 
   /// Calculates the **ischium width** (distance between left and right sitting bones).
   ///
-  /// The result is computed using Euclidean distance between each cushion’s
+  /// The result is computed using Euclidean distance between each cushion's
   /// detected [SeatCushion.ischiumPosition] adjusted by their respective [basePosition].
+  /// Returns 0.0 if either position is null (no pressure detected).
   double get ischiumWidth {
-    final lP = left.ischiumPosition() + LeftSeatCushion.basePosition;
-    final rP = right.ischiumPosition() + RightSeatCushion.basePosition;
+    final leftPos = left.ischiumPosition();
+    final rightPos = right.ischiumPosition();
+
+    // 如果任一側沒有壓力點，返回 0
+    if (leftPos == null || rightPos == null) {
+      return 0.0;
+    }
+
+    final lP = leftPos + LeftSeatCushion.basePosition;
+    final rP = rightPos + RightSeatCushion.basePosition;
     final dx = (rP.x - lP.x);
     final dy = (rP.y - lP.y);
     return sqrt(pow(dx, 2) + pow(dy, 2));

@@ -117,31 +117,55 @@ class SeatCushion extends Equatable {
         (1 / totalForce());
   }
 
-  /// Estimates the **ischium (sit-bone) position** based on the highest force regions.
+  /// Estimates the **ischium (sit-bone) position** based on the highest force point.
   ///
-  /// Sorts all units by force magnitude and averages the top contributors
-  /// until a saturation threshold is reached.
-  Point<double> ischiumPosition() {
+  /// Returns the position of the single highest pressure point.
+  /// Checks all corner points (top-left, top-right, bottom-left, bottom-right, center)
+  /// to find the exact location of maximum pressure (reddest point on heatmap).
+  /// Returns null if all forces are 0 or the list is empty.
+  Point<double>? ischiumPosition() {
     final units = this.units
       .expand((e) => e)
-      .toList(growable: false)
-      ..sort((a, b) => b.mmPoint.force.compareTo(a.mmPoint.force));
+      .toList(growable: false);
 
-    var leverage = Point<double>(0, 0);
-    var total = 0.0;
-
-    for (var item in units.indexed) {
-      final index = item.$1;
-      final unit = item.$2;
-      final force = unit.mmPoint.force < forceMax
-          ? unit.mmPoint.force
-          : forceMax;
-      leverage += unit.mmPoint.position * unit.mmPoint.force;
-      total += unit.mmPoint.force;
-      if (force == forceMax && index >= 9) break;
+    // 防止空列表
+    if (units.isEmpty) {
+      return null;
     }
 
-    return leverage * (1 / total);
+    // 收集所有角點（包括中心點）
+    final allPoints = units.expand((unit) => [
+      unit.tlPoint,  // 左上角
+      unit.trPoint,  // 右上角
+      unit.blPoint,  // 左下角
+      unit.brPoint,  // 右下角
+      unit.mmPoint,  // 中心點
+    ]).toList();
+
+    // 找到力值最大的點（最紅的點）
+    final maxPoint = allPoints.reduce(
+      (current, next) => next.force > current.force ? next : current
+    );
+
+    // 當所有力值都是 0 時不顯示圓圈
+    if (maxPoint.force == 0.0) {
+      return null;
+    }
+
+    // 返回最高壓力點的位置
+    return maxPoint.position;
+  }
+
+  /// Returns a fixed radius for the ischium circle.
+  /// Returns null if ischiumPosition is null.
+  double? ischiumRadius() {
+    final position = ischiumPosition();
+    if (position == null) {
+      return null;
+    }
+
+    // 返回固定半徑（約一個感測器單元的大小）
+    return SeatCushionUnit.sensorWidth * 0.6;
   }
 
   factory SeatCushion.fromJson(Map<String, dynamic> json) =>

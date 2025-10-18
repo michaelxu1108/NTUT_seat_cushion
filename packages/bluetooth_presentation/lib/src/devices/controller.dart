@@ -65,20 +65,30 @@ mixin BluetoothDevicesController on ChangeNotifier {
       // Flutter Blue Plus
       if (fbpIsSupported) {
         try {
+          print('🔍 開始藍牙掃描...');
           fbpSystemDevices = (await fbp.FlutterBluePlus.systemDevices(
             [],
           )).toSet();
+          print('   系統設備數量: ${fbpSystemDevices.length}');
           await BondFlutterBluePlus.updateBondedDevices();
+          print('   已配對設備數量: ${BondFlutterBluePlus.bondedDevices.length}');
           await fbp.FlutterBluePlus.startScan(
             timeout: const Duration(seconds: 15),
           );
-        } catch (e) {}
+        } catch (e) {
+          print('❌ 掃描啟動失敗: $e');
+        }
       }
     } else {
       // Flutter Blue Plus
       if (fbpIsSupported) {
         try {
           await fbp.FlutterBluePlus.stopScan();
+          print('🛑 藍牙掃描已停止');
+          print('   總共掃描到設備: ${ScanResultFlutterBluePlus.lastScannedDevices.length}');
+          for (final device in ScanResultFlutterBluePlus.lastScannedDevices) {
+            print('   - ${device.platformName.isEmpty ? "(無名稱)" : device.platformName} (${device.remoteId.str})');
+          }
         } catch (e) {}
       }
     }
@@ -127,13 +137,23 @@ mixin BluetoothDevicesController on ChangeNotifier {
   // Flutter Blue Plus
   @protected
   BluetoothDevice fbpDeviceToDevice(fbp.BluetoothDevice device) {
-    final isConnectable =
-        ScanResultFlutterBluePlus.lastScanResults
+    final scanResult = ScanResultFlutterBluePlus.lastScanResults
             .where((r) => r.device == device)
-            .firstOrNull
-            ?.advertisementData
-            .connectable ??
-        false;
+            .firstOrNull;
+    final isConnectable = scanResult?.advertisementData.connectable ?? false;
+
+    // 診斷日誌：顯示設備的廣播資訊
+    if (device.platformName.contains('UTL_Cushion')) {
+      print('📱 設備掃描結果: ${device.platformName}');
+      print('   MAC: ${device.remoteId.str}');
+      print('   可連接: $isConnectable');
+      print('   已連接: ${device.isConnected}');
+      print('   已配對: ${BondFlutterBluePlus.bondedDevices.contains(device)}');
+      print('   RSSI: ${device.rssi}');
+      if (scanResult != null) {
+        print('   廣播資料: ${scanResult.advertisementData}');
+      }
+    }
     VoidCallback? togglePairing;
     if (device.isBondable && !device.isBonded) {
       togglePairing = () async {
@@ -183,12 +203,18 @@ mixin BluetoothDevicesController on ChangeNotifier {
                 } catch (e) {}
               } else {
                 try {
+                  print('🔵 嘗試連接設備: ${device.platformName} (${device.remoteId.str})');
                   await device.connect(
                     license: License.free,
                     autoConnect: true,
                     mtu: null,
                   );
-                } catch (e) {}
+                  print('✅ 成功連接設備: ${device.platformName}');
+                } catch (e) {
+                  print('❌ 連接設備失敗: ${device.platformName}');
+                  print('   錯誤詳情: $e');
+                  rethrow;
+                }
               }
             }
           : null,
