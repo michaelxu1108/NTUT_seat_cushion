@@ -28,7 +28,8 @@ late final Initializer initializer;
 /// ============================================
 /// Set this to true to use mock data (no Bluetooth device needed)
 /// Set this to false to use real Bluetooth device
-const bool useMockData = true;
+const bool useMockData = false;
+
 /// ============================================
 
 Future<void> main() async {
