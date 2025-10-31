@@ -1,0 +1,53 @@
+{
+  "cmake.ignoreCMakeListsMissing": true,
+
+  // ========================================
+  // 禁用 Java 擴充套件功能（等同於停用）
+  // ========================================
+  "java.enabled": false,
+  "java.jdt.ls.java.home": null,
+  "java.import.gradle.enabled": false,
+  "java.import.maven.enabled": false,
+  "java.autobuild.enabled": false,
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "java.project.sourcePaths": [],
+  "java.project.referencedLibraries": [],
+  "java.server.launchMode": "Standard",
+  "java.import.exclusions": [
+    "**"
+  ],
+
+  // ========================================
+  // 禁用 Gradle 擴充套件功能
+  // ========================================
+  "gradle.nestedProjects": false,
+  "gradle.autoDetect": "off",
+
+  // ========================================
+  // 排除平台特定資料夾（不監控、不顯示）
+  // ========================================
+  "files.exclude": {
+    "**/android/.gradle": true,
+    "**/android/build": true,
+    "**/.gradle": true,
+    "**/build": true
+  },
+  "files.watcherExclude": {
+    "**/android/**": true,
+    "**/ios/**": true,
+    "**/macos/**": true,
+    "**/linux/**": true,
+    "**/windows/**": true,
+    "**/web/**": true,
+    "**/.gradle/**": true,
+    "**/build/**": true
+  },
+  "search.exclude": {
+    "**/android/**": true,
+    "**/ios/**": true,
+    "**/macos/**": true,
+    "**/linux/**": true,
+    "**/windows/**": true,
+    "**/web/**": true
+  }
+}

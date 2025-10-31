@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "dart-code.dart-code",
+    "dart-code.flutter"
+  ],
+  "unwantedRecommendations": [
+    "redhat.java",
+    "vscjava.vscode-gradle",
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-java-dependency"
+  ]
+}
