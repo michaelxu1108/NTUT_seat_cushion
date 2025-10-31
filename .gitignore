@@ -2,11 +2,6 @@
 .claude
 .atom/
 .idea/
-.vscode/
-!.vscode/tasks.json
-!.vscode/settings.json
-!.vscode/extensions.json
-!.vscode/launch.json
 
 .packages
 .pub/
