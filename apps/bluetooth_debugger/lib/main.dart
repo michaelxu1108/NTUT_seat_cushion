@@ -38,19 +38,16 @@ Future<void> init() async {
       for (final d in fbp.FlutterBluePlus.connectedDevices) {
         try {
           await d.readRssi();
-        } catch (e) {}
+        } catch (e) {
+          debugPrint(e.toString());
+        }
       }
     });
   }
   writeBluetoothPacketFile = WriteBluetoothPacketFile(
     fbpIsSupported: fbpIsSupported,
     fileNameCreator: (time) {
-      return "Bluetooth_Debugger_${time
-        .toString()
-        .replaceAll(" ", "_")
-        .replaceAll(":", "-")
-        .replaceAll(".", "-")
-      }";
+      return "Bluetooth_Debugger_${time.toString().replaceAll(" ", "_").replaceAll(":", "-").replaceAll(".", "-")}";
     },
   );
   return;
@@ -92,7 +89,9 @@ class MyApp extends StatelessWidget {
           }
           try {
             await fbp.FlutterBluePlus.turnOn();
-          } catch (e) {}
+          } catch (e) {
+            debugPrint(e.toString());
+          }
         },
       ),
       child: BluetoothStatusView(),
@@ -100,12 +99,8 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Bluetooth Debugger',
-      theme: ThemeData.light(
-        useMaterial3: true,
-      ).copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ),
+      theme: ThemeData.light(useMaterial3: true).copyWith(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         extensions: [
           // Bluetooth Scanner
           BluetoothDeviceTileTheme(
@@ -115,10 +110,10 @@ class MyApp extends StatelessWidget {
             disconnectedColor: Colors.red,
             disconnectedIcon: asset.BluetoothIcons.disconnected,
             highlightColor: Colors.black,
-            highSpeedIcon: asset.BluetoothIcons.high_speed,
+            highSpeedIcon: asset.BluetoothIcons.highSpeed,
             inSystemIcon: asset.BluetoothIcons.system,
-            lowPowerIcon: asset.BluetoothIcons.low_power,
-            nullRssiIcon: asset.BluetoothIcons.null_rssi,
+            lowPowerIcon: asset.BluetoothIcons.lowPower,
+            nullRssiIcon: asset.BluetoothIcons.nullRssi,
             pairedIcon: asset.BluetoothIcons.paired,
             selectedColor: Colors.green,
             typeIconColor: Colors.orange,
@@ -126,20 +121,12 @@ class MyApp extends StatelessWidget {
           ),
 
           // Bluetooth Status
-          BluetoothStatusTheme(
-            backGroundColor: Colors.blue,
-          ),
+          BluetoothStatusTheme(backGroundColor: Colors.blue),
 
           // Flutter Blue Pluse Tile
-          ServiceTileTheme(
-            titleColor: Colors.blue,
-          ),
-          CharacteristicTileTheme(
-            titleColor: Colors.green,
-          ),
-          DescriptorTileTheme(
-            titleColor: Colors.orange,
-          ),
+          ServiceTileTheme(titleColor: Colors.blue),
+          CharacteristicTileTheme(titleColor: Colors.green),
+          DescriptorTileTheme(titleColor: Colors.orange),
           BytesTheme(
             colorCycle: [Colors.red, Colors.green],
             indexColor: Colors.grey,
@@ -168,12 +155,8 @@ class MyApp extends StatelessWidget {
           ),
         ],
       ),
-      darkTheme: ThemeData.dark(
-        useMaterial3: true,
-      ).copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.indigoAccent,
-        ),
+      darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent),
         extensions: [
           // Bluetooth Scanner
           BluetoothDeviceTileTheme(
@@ -183,10 +166,10 @@ class MyApp extends StatelessWidget {
             disconnectedColor: Colors.red[700]!,
             disconnectedIcon: asset.BluetoothIcons.disconnected,
             highlightColor: Colors.white,
-            highSpeedIcon: asset.BluetoothIcons.high_speed,
+            highSpeedIcon: asset.BluetoothIcons.highSpeed,
             inSystemIcon: asset.BluetoothIcons.system,
-            lowPowerIcon: asset.BluetoothIcons.low_power,
-            nullRssiIcon: asset.BluetoothIcons.null_rssi,
+            lowPowerIcon: asset.BluetoothIcons.lowPower,
+            nullRssiIcon: asset.BluetoothIcons.nullRssi,
             pairedIcon: asset.BluetoothIcons.paired,
             selectedColor: Colors.green[700]!,
             typeIconColor: Colors.orange[700]!,
@@ -194,20 +177,12 @@ class MyApp extends StatelessWidget {
           ),
 
           // Bluetooth Status
-          BluetoothStatusTheme(
-            backGroundColor: Colors.indigoAccent,
-          ),
+          BluetoothStatusTheme(backGroundColor: Colors.indigoAccent),
 
           // Flutter Blue Pluse Tile
-          ServiceTileTheme(
-            titleColor: Colors.indigoAccent,
-          ),
-          CharacteristicTileTheme(
-            titleColor: Colors.green[700]!,
-          ),
-          DescriptorTileTheme(
-            titleColor: Colors.orange[700]!,
-          ),
+          ServiceTileTheme(titleColor: Colors.indigoAccent),
+          CharacteristicTileTheme(titleColor: Colors.green[700]!),
+          DescriptorTileTheme(titleColor: Colors.orange[700]!),
           BytesTheme(
             colorCycle: [Colors.red[700]!, Colors.green[700]!],
             indexColor: Colors.grey,
@@ -239,9 +214,8 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       home: StreamProvider(
-        create: (_) => (fbpIsSupported)
-          ? fbp.FlutterBluePlus.adapterState
-          : null,
+        create: (_) =>
+            (fbpIsSupported) ? fbp.FlutterBluePlus.adapterState : null,
         initialData: (fbpIsSupported)
             ? fbp.FlutterBluePlus.adapterStateNow
             : BluetoothAdapterState.on,
@@ -252,9 +226,7 @@ class MyApp extends StatelessWidget {
               : bluetoothOffPage;
         },
       ),
-      navigatorObservers: [
-        BluetoothAdapterStateObserver(),
-      ],
+      navigatorObservers: [BluetoothAdapterStateObserver()],
     );
   }
 }

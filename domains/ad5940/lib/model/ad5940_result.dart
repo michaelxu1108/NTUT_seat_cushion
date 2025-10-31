@@ -14,18 +14,14 @@ class AD5940Result with EquatableMixin {
   });
 
   @override
-  List<Object?> get props => [
-    lptias,
-    hstias,
-    temperatures,
-  ];
+  List<Object?> get props => [lptias, hstias, temperatures];
 
   factory AD5940Result.fromJson(Map<String, dynamic> json) =>
       _$AD5940ResultFromJson(json);
 
-  @override
+  // @override
   Map<String, dynamic> toJson() => _$AD5940ResultToJson(this);
 
-  static Map<String, dynamic> _toJson(AD5940Result seatCushion) =>
-      seatCushion.toJson();
+  // static Map<String, dynamic> _toJson(AD5940Result seatCushion) =>
+  // seatCushion.toJson();
 }

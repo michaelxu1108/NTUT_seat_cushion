@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - 'apps/virus_detector_cart_controller/v*'
-  pull_request:
-    tags:
-      - 'apps/virus_detector_cart_controller/v*'
   workflow_dispatch:
 
 permissions:

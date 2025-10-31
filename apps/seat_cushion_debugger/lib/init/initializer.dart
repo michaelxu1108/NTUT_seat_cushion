@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bluetooth_utils/bluetooth_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fbp;
 import 'package:seat_cushion/seat_cushion.dart';
@@ -40,7 +41,9 @@ class Initializer {
         for (final d in fbp.FlutterBluePlus.connectedDevices) {
           try {
             await d.readRssi();
-          } catch (e) {}
+          } catch (e) {
+            debugPrint(e.toString());
+          }
         }
       });
       // Auto setNotifyValue while a new [fbp.BluetoothDevice] get connected.
@@ -58,7 +61,9 @@ class Initializer {
                   properties.notifyEncryptionRequired) {
                 try {
                   c.setNotifyValue(true);
-                } catch (e) {}
+                } catch (e) {
+                  debugPrint(e.toString());
+                }
               }
             }
           }

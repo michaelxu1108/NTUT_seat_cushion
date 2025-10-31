@@ -40,8 +40,9 @@ class SeatCushionForceWidget extends StatelessWidget {
     final borderWidth = min(width, height) * 1.0 / 15.0;
     final borderRadius = borderWidth;
 
-    // Convert force from grams to mmHg (1kg = 760mmHg)
-    final forceInMmHg = (force / 1000.0) * 760;
+    // Convert force from grams to mmHg (1 bar = 750.062 mmHg)
+    // Clamp to maximum 900 mmHg to prevent display overflow
+    final forceInMmHg = ((force / 1000.0) * 750.062).clamp(0.0, 900.0);
 
     return Container(
       decoration: BoxDecoration(

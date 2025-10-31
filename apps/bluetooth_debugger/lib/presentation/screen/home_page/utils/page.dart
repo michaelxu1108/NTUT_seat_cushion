@@ -1,7 +1,7 @@
 part of '../home_page.dart';
 
 class BluetoothDeviceTileTheme extends BluetoothDeviceDetailsTileTheme {
-  BluetoothDeviceTileTheme({
+  const BluetoothDeviceTileTheme({
     required super.classicIcon,
     required super.connectedColor,
     required super.connectedIcon,
@@ -48,9 +48,7 @@ class HomePage extends StatelessWidget {
             final themeExtension = themeData.extension<HomePageTheme>();
             final isRunning = context.watch<bool>();
             VoidCallback? onPressed = app.toggle;
-            final icon = (isRunning)
-              ? Icon(Icons.stop)
-              : Icon(Icons.save);
+            final icon = (isRunning) ? Icon(Icons.stop) : Icon(Icons.save);
             final color = (isRunning)
                 ? themeExtension?.stopTaskColor
                 : themeExtension?.startTaskColor;
@@ -79,16 +77,12 @@ class HomePage extends StatelessWidget {
           final themeData = Theme.of(context);
           final themeExtension = themeData.extension<HomePageTheme>();
           final iconData = themeExtension?.filterToIcon(filter);
-          final color = check
-            ? themeExtension?.toggleFilterColor
-            : null;
+          final color = check ? themeExtension?.toggleFilterColor : null;
           return IconButton(
             onPressed: () => context
                 .read<HomePageController>()
                 .toggleBluetoothDevicesFilter(filter),
-            icon: Icon(
-              iconData,
-            ),
+            icon: Icon(iconData),
             color: color,
             highlightColor: themeExtension?.highlightColor,
           );
@@ -129,9 +123,7 @@ class HomePage extends StatelessWidget {
         return TextField(
           controller: controller,
           keyboardType: TextInputType.text,
-          inputFormatters: [
-            HexFormatter(),
-          ],
+          inputFormatters: [HexFormatter()],
         );
       },
     );
@@ -146,9 +138,7 @@ class HomePage extends StatelessWidget {
         if (bluetoothDevice != null) {
           return MultiProvider(
             providers: [
-              ProxyProvider(
-                update: (_, _, _) => bluetoothDevice,
-              ),
+              ProxyProvider(update: (_, _, _) => bluetoothDevice),
               ChangeNotifierProvider<_ValueEditingController>(
                 create: (_) => _ValueEditingController(),
               ),
@@ -228,10 +218,8 @@ class HomePage extends StatelessWidget {
       builder: (context, constraints) {
         return GestureDetector(
           onHorizontalDragUpdate: (details) {
-            if (
-              details.localPosition.dx < constraints.maxWidth * 0.5
-              && details.primaryDelta! > 10
-            ) {
+            if (details.localPosition.dx < constraints.maxWidth * 0.5 &&
+                details.primaryDelta! > 10) {
               Scaffold.of(context).openDrawer();
             }
           },

@@ -73,11 +73,7 @@ class DeviceView extends StatelessWidget {
 
   final Widget? writeField;
 
-  const DeviceView({
-    super.key,
-    this.serviceTile,
-    this.writeField,
-  });
+  const DeviceView({super.key, this.serviceTile, this.writeField});
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +82,7 @@ class DeviceView extends StatelessWidget {
         final name = context.select<BluetoothDevice, String>(
           (d) => d.platformName,
         );
-        return Text(
-          name, 
-          style: Theme.of(context).textTheme.titleLarge,
-        );
+        return Text(name, style: Theme.of(context).textTheme.titleLarge);
       },
     );
     final connectionButton = Builder(
@@ -117,7 +110,9 @@ class DeviceView extends StatelessWidget {
                 onPressed: () async {
                   try {
                     await device.disconnect(queue: true);
-                  } catch (e) {}
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
                 },
                 child: Text("DISCONNECT"),
               );
@@ -138,18 +133,13 @@ class DeviceView extends StatelessWidget {
                     cancelController.value = false;
                     try {
                       await device.disconnect(queue: false);
-                    } catch (e) {}
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
                   },
-                  child: Text(
-                    "CANCEL",
-                  ),
+                  child: Text("CANCEL"),
                 );
-                return Row(
-                  children: [
-                    spinner,
-                    cancelButton,
-                  ],
-                );
+                return Row(children: [spinner, cancelButton]);
               } else {
                 return TextButton(
                   onPressed: () async {
@@ -160,11 +150,11 @@ class DeviceView extends StatelessWidget {
                         autoConnect: true,
                         mtu: null,
                       );
-                    } catch (e) {}
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
                   },
-                  child: Text(
-                    "CONNECT",
-                  ),
+                  child: Text("CONNECT"),
                 );
               }
             }
@@ -286,7 +276,9 @@ class DeviceView extends StatelessWidget {
                             loadingController.value = true;
                             try {
                               await device.discoverServices();
-                            } catch (e) {}
+                            } catch (e) {
+                              debugPrint(e.toString());
+                            }
                           }
                         : null,
                     child: const Text("Get Services"),
@@ -299,10 +291,7 @@ class DeviceView extends StatelessWidget {
         return ListTile(
           leading: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              rssi,
-            ],
+            children: [icon, rssi],
           ),
           title: title,
           trailing: discover,
@@ -320,10 +309,7 @@ class DeviceView extends StatelessWidget {
               Builder(
                 builder: (context) {
                   final theme = Theme.of(context);
-                  return Text(
-                    'MTU Size',
-                    style: theme.textTheme.titleSmall,
-                  );
+                  return Text('MTU Size', style: theme.textTheme.titleSmall);
                 },
               ),
               StreamProvider(
@@ -332,10 +318,7 @@ class DeviceView extends StatelessWidget {
                 builder: (context, _) {
                   final theme = Theme.of(context);
                   final mtu = context.watch<int>();
-                  return Text(
-                    '$mtu bytes',
-                    style: theme.textTheme.bodySmall,
-                  );
+                  return Text('$mtu bytes', style: theme.textTheme.bodySmall);
                 },
               ),
             ],
@@ -350,7 +333,9 @@ class DeviceView extends StatelessWidget {
                   if (mtu == null) return;
                   try {
                     await device.requestMtu(mtu);
-                  } catch (e) {}
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
                 },
               );
             },
@@ -364,7 +349,9 @@ class DeviceView extends StatelessWidget {
                   if (mtu == null) return;
                   try {
                     await device.requestMtu(mtu);
-                  } catch (e) {}
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
                 },
               );
             },
@@ -375,9 +362,7 @@ class DeviceView extends StatelessWidget {
     final writeTile = Builder(
       builder: (context) {
         if (writeField == null) return Column();
-        return ListTile(
-          title: writeField,
-        );
+        return ListTile(title: writeField);
       },
     );
     final servicesList = Builder(
@@ -392,17 +377,15 @@ class DeviceView extends StatelessWidget {
                 (services) => services.length,
               );
               return Column(
-                children: List.generate(
-                  length,
-                  (index) {
-                    return ProxyProvider<
-                      List<BluetoothService>,
-                      BluetoothService
-                    >(
-                      update: (_, services, __) => services.elementAt(index),
-                      child: serviceTile,
-                    );
-                  }),
+                children: List.generate(length, (index) {
+                  return ProxyProvider<
+                    List<BluetoothService>,
+                    BluetoothService
+                  >(
+                    update: (_, services, _) => services.elementAt(index),
+                    child: serviceTile,
+                  );
+                }),
               );
             },
           ),
@@ -414,9 +397,7 @@ class DeviceView extends StatelessWidget {
       appBar: AppBar(
         title: nameText,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        actions: [
-          connectionButton,
-        ],
+        actions: [connectionButton],
       ),
       body: Column(
         children: [
@@ -424,11 +405,7 @@ class DeviceView extends StatelessWidget {
           statusTile,
           mtuTile,
           writeTile,
-          Expanded(
-            child: SingleChildScrollView(
-              child: servicesList,
-            ),
-          ),
+          Expanded(child: SingleChildScrollView(child: servicesList)),
         ],
       ),
     );

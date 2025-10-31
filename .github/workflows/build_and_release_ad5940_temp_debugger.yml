@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - 'apps/ad5940_temp_debugger/v*'
-  pull_request:
-    tags:
-      - 'apps/ad5940_temp_debugger/v*'
   workflow_dispatch:
 
 permissions:

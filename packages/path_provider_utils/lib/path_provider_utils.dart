@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<Directory?> getSystemDownloadDirectory() async {
@@ -16,6 +17,8 @@ Future<Directory?> getSystemDownloadDirectory() async {
         return getExternalStorageDirectory();
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    debugPrint(err.toString());
+  }
   return null;
 }

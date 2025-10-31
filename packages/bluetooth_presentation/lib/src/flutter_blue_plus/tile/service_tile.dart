@@ -6,10 +6,8 @@ class ServiceTileTheme extends ThemeExtension<ServiceTileTheme>
     with _$ServiceTileThemeTailorMixin {
   @override
   final Color titleColor;
-  
-  const ServiceTileTheme({
-    required this.titleColor,
-  });
+
+  const ServiceTileTheme({required this.titleColor});
 }
 
 /// **Requirements:**
@@ -67,16 +65,13 @@ class ServiceTile extends StatelessWidget {
                     BluetoothService,
                     BluetoothCharacteristic
                   >(
-                    update: (_, service, __) =>
+                    update: (_, service, _) =>
                         service.characteristics.elementAt(index),
                     child: characteristicTile,
                   );
                 }),
               )
-              : ListTile(
-                title: titleText,
-                subtitle: uuidText,
-              );
+            : ListTile(title: titleText, subtitle: uuidText);
       },
     );
   }

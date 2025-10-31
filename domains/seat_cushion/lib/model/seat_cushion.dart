@@ -52,6 +52,7 @@ class SeatCushion extends Equatable {
       SeatCushionUnit.sensorWidth * unitsMaxColumn;
 
   /// Maximum measurable force of each unit sensor.
+  /// TODO 坐墊最高值(ui level)
   static const double forceMax = 2500;
 
   /// Minimum measurable force of each unit sensor.
@@ -70,11 +71,7 @@ class SeatCushion extends Equatable {
   ///
   /// Throws an [Exception] if [forces] dimensions do not match
   /// [unitsMaxRow] * [unitsMaxColumn].
-  SeatCushion({
-    required this.forces,
-    required this.time,
-    required this.type,
-  }) {
+  SeatCushion({required this.forces, required this.time, required this.type}) {
     if (forces.length != unitsMaxRow) {
       throw Exception("forces.length must be $unitsMaxRow.");
     }
@@ -87,11 +84,7 @@ class SeatCushion extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-    forces,
-    time,
-    type,
-  ];
+  List<Object?> get props => [forces, time, type];
 
   /// Returns the total accumulated force across all sensors.
   double totalForce() {
@@ -124,9 +117,7 @@ class SeatCushion extends Equatable {
   /// to find the exact location of maximum pressure (reddest point on heatmap).
   /// Returns null if all forces are 0 or the list is empty.
   Point<double>? ischiumPosition() {
-    final units = this.units
-      .expand((e) => e)
-      .toList(growable: false);
+    final units = this.units.expand((e) => e).toList(growable: false);
 
     // 防止空列表
     if (units.isEmpty) {
@@ -134,17 +125,21 @@ class SeatCushion extends Equatable {
     }
 
     // 收集所有角點（包括中心點）
-    final allPoints = units.expand((unit) => [
-      unit.tlPoint,  // 左上角
-      unit.trPoint,  // 右上角
-      unit.blPoint,  // 左下角
-      unit.brPoint,  // 右下角
-      unit.mmPoint,  // 中心點
-    ]).toList();
+    final allPoints = units
+        .expand(
+          (unit) => [
+            unit.tlPoint, // 左上角
+            unit.trPoint, // 右上角
+            unit.blPoint, // 左下角
+            unit.brPoint, // 右下角
+            unit.mmPoint, // 中心點
+          ],
+        )
+        .toList();
 
     // 找到力值最大的點（最紅的點）
     final maxPoint = allPoints.reduce(
-      (current, next) => next.force > current.force ? next : current
+      (current, next) => next.force > current.force ? next : current,
     );
 
     // 當所有力值都是 0 時不顯示圓圈
@@ -181,10 +176,8 @@ class SeatCushion extends Equatable {
 @CopyWith()
 @JsonSerializable()
 class LeftSeatCushion extends SeatCushion {
-  LeftSeatCushion({
-    required super.forces,
-    required super.time,
-  }) : super(type: SeatCushionType.left);
+  LeftSeatCushion({required super.forces, required super.time})
+    : super(type: SeatCushionType.left);
 
   /// Converts a generic [SeatCushion] to a [LeftSeatCushion] if its [type] matches.
   static LeftSeatCushion? fromProto(SeatCushion seatCushion) {
@@ -215,10 +208,8 @@ class LeftSeatCushion extends SeatCushion {
 @CopyWith()
 @JsonSerializable()
 class RightSeatCushion extends SeatCushion {
-  RightSeatCushion({
-    required super.forces,
-    required super.time,
-  }) : super(type: SeatCushionType.right);
+  RightSeatCushion({required super.forces, required super.time})
+    : super(type: SeatCushionType.right);
 
   /// Converts a generic [SeatCushion] to a [RightSeatCushion] if its [type] matches.
   static RightSeatCushion? fromProto(SeatCushion seatCushion) {

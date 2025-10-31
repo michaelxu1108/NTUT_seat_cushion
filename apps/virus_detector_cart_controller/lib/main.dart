@@ -106,7 +106,9 @@ class MyApp extends StatelessWidget {
                         // TODO
                         // point to bytes.
                         await c.write([]);
-                      } catch (e) {}
+                      } catch (e) {
+                        debugPrint(e.toString());
+                      }
                     }
                   }
                 }
@@ -126,7 +128,9 @@ class MyApp extends StatelessWidget {
                         // TODO
                         // valve to bytes.
                         await c.write([]);
-                      } catch (e) {}
+                      } catch (e) {
+                        debugPrint(e.toString());
+                      }
                     }
                   }
                 }

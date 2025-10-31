@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - 'apps/seat_cushion_debugger/v*'
-  pull_request:
-    tags:
-      - 'apps/seat_cushion_debugger/v*'
   workflow_dispatch:
 
 permissions:

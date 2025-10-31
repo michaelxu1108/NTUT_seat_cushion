@@ -22,42 +22,91 @@ workspace:
 melos: 
 
 dependency_overrides:
+  # ========================================
+  # Flutter 核心框架
+  # ========================================
   flutter:
     sdk: flutter
-  flutter_localizations:
+  flutter_localizations:  # Flutter 國際化支援
     sdk: flutter
-  awesome_dialog: ^3.1.0
-  copy_with_extension: ^10.0.1
-  copy_with_extension_gen: ^10.0.1
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.8
-  equatable: ^2.0.7
-  ffi: ^2.1.4
-  file_picker: ^10.2.0
-  flutter_blue_plus: ^2.0.0
-  flutter_blue_plus_platform_interface: ^8.0.0
-  flutter_joystick: ^0.2.2
-  flutter_ringtone_player: ^4.0.0+3
-  fluttertoast: ^8.2.10
-  hive: ^2.2.3
-  json_annotation: ^4.9.0
-  package_info_plus: ^9.0.0
-  path_provider: ^2.1.5
-  permission_handler: ^12.0.1
-  plugin_platform_interface: ^2.0.2
-  provider: ^6.1.5+1
-  shared_preferences: ^2.5.3
-  simple_3d: ^16.0.2
-  simple_3d_renderer: ^22.0.2
-  syncfusion_flutter_charts: ^31.2.2
-  syncfusion_flutter_xlsio: ^31.2.2
-  synchronized: ^3.4.0
-  talkjs_flutter_inappwebview: ^6.1.5+3
-  theme_tailor: ^3.1.1
-  theme_tailor_annotation: any
-  util_simple_3d: ^12.0.2
-  vector_math: ^2.2.0
+
+  # ========================================
+  # UI 元件與對話框
+  # ========================================
+  awesome_dialog: ^3.1.0  # 精美的對話框元件（用於提示、確認等）
+  cupertino_icons: ^1.0.8  # iOS 風格圖示
+  fluttertoast: ^8.2.10  # Toast 提示訊息顯示
+
+  # ========================================
+  # 程式碼生成工具
+  # ========================================
+  copy_with_extension: ^10.0.1  # copyWith 方法生成（用於不可變數據類別）
+  copy_with_extension_gen: ^10.0.1  # copyWith 生成器
+  json_annotation: ^4.9.0  # JSON 序列化註解
+
+  # ========================================
+  # 藍牙通信
+  # ========================================
+  flutter_blue_plus: ^2.0.0  # 藍牙 BLE 通信（用於座墊、感測器連接）
+  flutter_blue_plus_platform_interface: ^8.0.0  # 藍牙平台接口
+
+  # ========================================
+  # 資料處理與儲存
+  # ========================================
+  equatable: ^2.0.7  # 簡化物件相等性比較（常用於 state management）
+  hive: ^2.2.3  # 輕量級 NoSQL 資料庫（本地資料儲存）
+  shared_preferences: ^2.5.3  # 簡單的鍵值對儲存（設定、偏好）
+
+  # ========================================
+  # 檔案與路徑管理
+  # ========================================
+  file_picker: ^10.2.0  # 檔案選擇器（匯入/匯出資料）
+  path_provider: ^2.1.5  # 取得系統路徑（文件目錄、暫存目錄等）
+
+  # ========================================
+  # 系統權限與資訊
+  # ========================================
+  permission_handler: ^12.0.1  # 處理系統權限請求（藍牙、儲存等）
+  package_info_plus: ^9.0.0  # 取得應用程式資訊（版本號、名稱等）
+
+  # ========================================
+  # 狀態管理與外掛
+  # ========================================
+  provider: ^6.1.5+1  # 狀態管理解決方案（用於全局狀態）
+  plugin_platform_interface: ^2.0.2  # Flutter 外掛平台接口基礎類別
+
+  # ========================================
+  # 3D 渲染（座墊視覺化）
+  # ========================================
+  simple_3d: ^16.0.2  # 3D 模型載入與操作
+  simple_3d_renderer: ^22.0.2  # 3D 場景渲染引擎
+  util_simple_3d: ^12.0.2  # 3D 工具函數
+  vector_math: ^2.2.0  # 向量與矩陣數學運算（3D 計算）
+
+  # ========================================
+  # 數據視覺化與圖表
+  # ========================================
+  syncfusion_flutter_charts: ^31.2.2  # 專業圖表庫（用於病毒檢測車數據顯示）
+  syncfusion_flutter_xlsio: ^31.2.2  # Excel 檔案讀寫（資料匯出）
+
+  # ========================================
+  # 硬體控制與互動
+  # ========================================
+  flutter_joystick: ^0.2.2  # 虛擬搖桿元件（病毒檢測車控制）
+  flutter_ringtone_player: ^4.0.0+3  # 播放系統鈴聲/提示音
+
+  # ========================================
+  # 進階功能
+  # ========================================
+  ffi: ^2.1.4  # C 語言互操作（用於 AD5940 晶片驅動）
+  synchronized: ^3.4.0  # 同步鎖機制（避免併發問題）
+  talkjs_flutter_inappwebview: ^6.1.5+3  # 內嵌 WebView 元件
+
+  # ========================================
+  # 主題與樣式
+  # ========================================
+  theme_tailor: ^3.1.1  # 主題生成工具
+  theme_tailor_annotation: any  # 主題註解
   
   # ----------------------------------------------------------------------
   # dev_dependencies:

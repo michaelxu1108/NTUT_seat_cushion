@@ -35,10 +35,7 @@ class SeatCushionSet extends Equatable {
   final RightSeatCushion right;
 
   /// Creates a paired seat cushion set containing both left and right units.
-  const SeatCushionSet({
-    required this.left,
-    required this.right,
-  });
+  const SeatCushionSet({required this.left, required this.right});
 
   /// Calculates the **ischium width** (distance between left and right sitting bones).
   ///
@@ -63,10 +60,7 @@ class SeatCushionSet extends Equatable {
 
   /// Used by the [Equatable] package to support value equality.
   @override
-  List<Object?> get props => [
-    left,
-    right,
-  ];
+  List<Object?> get props => [left, right];
 
   /// Deserializes a [SeatCushionSet] object from JSON.
   factory SeatCushionSet.fromJson(Map<String, dynamic> json) =>
@@ -74,7 +68,4 @@ class SeatCushionSet extends Equatable {
 
   /// Serializes this [SeatCushionSet] to a JSON-compatible map.
   Map<String, dynamic> toJson() => _$SeatCushionSetToJson(this);
-
-  static Map<String, dynamic> _toJson(SeatCushionSet seatCushionSet) =>
-      seatCushionSet.toJson();
 }

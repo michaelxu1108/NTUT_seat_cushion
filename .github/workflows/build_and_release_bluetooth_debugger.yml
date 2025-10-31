@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - 'apps/bluetooth_debugger/v*'
-  pull_request:
-    tags:
-      - 'apps/bluetooth_debugger/v*'
   workflow_dispatch:
 
 permissions:

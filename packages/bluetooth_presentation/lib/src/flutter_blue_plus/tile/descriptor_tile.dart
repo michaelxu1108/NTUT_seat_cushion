@@ -6,10 +6,8 @@ class DescriptorTileTheme extends ThemeExtension<DescriptorTileTheme>
     with _$DescriptorTileThemeTailorMixin {
   @override
   final Color titleColor;
-  
-  const DescriptorTileTheme({
-    required this.titleColor,
-  });
+
+  const DescriptorTileTheme({required this.titleColor});
 }
 
 /// **Requirements:**
@@ -24,11 +22,7 @@ class DescriptorTile extends StatelessWidget {
   /// It provide the `List<int>`.
   final Widget? valueTile;
 
-  const DescriptorTile({
-    super.key,
-    this.writeValueGetter,
-    this.valueTile,
-  });
+  const DescriptorTile({super.key, this.writeValueGetter, this.valueTile});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +71,9 @@ class DescriptorTile extends StatelessWidget {
           onPressed: () async {
             try {
               await descriptor.read();
-            } catch (e) {}
+            } catch (e) {
+              debugPrint(e.toString());
+            }
           },
           child: const Text("Read"),
         );
@@ -91,7 +87,9 @@ class DescriptorTile extends StatelessWidget {
           onPressed: () async {
             try {
               await descriptor.write(writeValueGetter?.call() ?? []);
-            } catch (e) {}
+            } catch (e) {
+              debugPrint(e.toString());
+            }
           },
           child: Text("Write"),
         );
@@ -107,10 +105,7 @@ class DescriptorTile extends StatelessWidget {
           const Divider(),
           Row(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              readButton,
-              writeButton,
-            ],
+            children: [readButton, writeButton],
           ),
           valueField,
         ],

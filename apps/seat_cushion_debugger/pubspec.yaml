@@ -1,8 +1,8 @@
 name: seat_cushion_debugger
 description: "Seat Cushion Debugger."
-publish_to: 'none'
+publish_to: "none"
 version: 0.0.1
-homepage:
+# homepage:
 
 environment:
   sdk: ^3.9.2

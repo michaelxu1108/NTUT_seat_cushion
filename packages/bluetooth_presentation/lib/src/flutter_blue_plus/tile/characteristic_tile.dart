@@ -6,10 +6,8 @@ class CharacteristicTileTheme extends ThemeExtension<CharacteristicTileTheme>
     with _$CharacteristicTileThemeTailorMixin {
   @override
   final Color titleColor;
-  
-  const CharacteristicTileTheme({
-    required this.titleColor,
-  });
+
+  const CharacteristicTileTheme({required this.titleColor});
 }
 
 /// **Requirements:**
@@ -90,7 +88,9 @@ class CharacteristicTile extends StatelessWidget {
                 onPressed: () async {
                   try {
                     await characteristic.read();
-                  } catch (e) {}
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
                 },
                 child: const Text("Read"),
               )
@@ -113,13 +113,11 @@ class CharacteristicTile extends StatelessWidget {
                 onPressed: () async {
                   try {
                     await characteristic.write(writeValueGetter?.call() ?? []);
-                  } catch(e) {}
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
                 },
-                child: Text(
-                  writeWithoutResponse
-                  ? "WriteNoResp"
-                  : "Write",
-                ),
+                child: Text(writeWithoutResponse ? "WriteNoResp" : "Write"),
               )
             : Column();
       },
@@ -142,13 +140,11 @@ class CharacteristicTile extends StatelessWidget {
                   onPressed: () async {
                     try {
                       await characteristic.setNotifyValue(!isNotifying);
-                    } catch (e) {}
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
                   },
-                  child: Text(
-                    isNotifying
-                    ? "Unsubscribe"
-                    : "Subscribe",
-                  ),
+                  child: Text(isNotifying ? "Unsubscribe" : "Subscribe"),
                 );
               },
             ),
@@ -175,25 +171,19 @@ class CharacteristicTile extends StatelessWidget {
                 const Divider(),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    readButton,
-                    writeButton,
-                    notifyButton,
-                  ],
+                  children: [readButton, writeButton, notifyButton],
                 ),
                 valueField,
               ],
             ),
           ),
-          children: List.generate(
-            length,
-            (index) {
-              return ProxyProvider<BluetoothCharacteristic, BluetoothDescriptor>(
-                update: (_, characteristics, __) => characteristics.descriptors.elementAt(index),
-                child: descriptorTile,
-              );
-            },
-          ),
+          children: List.generate(length, (index) {
+            return ProxyProvider<BluetoothCharacteristic, BluetoothDescriptor>(
+              update: (_, characteristics, _) =>
+                  characteristics.descriptors.elementAt(index),
+              child: descriptorTile,
+            );
+          }),
         );
       },
     );

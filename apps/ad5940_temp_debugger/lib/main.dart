@@ -268,10 +268,7 @@ class HomePage extends StatelessWidget {
           appBar: TabBar(
             isScrollable: false,
             tabs: tabViewMap.keys.map((text) {
-              return Text(
-                text,
-                style: Theme.of(context).textTheme.titleLarge,
-              );
+              return Text(text, style: Theme.of(context).textTheme.titleLarge);
             }).toList(),
           ),
           body: TabBarView(
@@ -379,7 +376,9 @@ class MyApp extends StatelessWidget {
                                 .map((t) => t.hexToBytes())) {
                           await c.write(bytes);
                         }
-                      } catch (e) {}
+                      } catch (e) {
+                        debugPrint(e.toString());
+                      }
                     }
                   }
                 }

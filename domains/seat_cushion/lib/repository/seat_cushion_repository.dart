@@ -26,18 +26,12 @@ class SeatCushionEntity {
   final SeatCushion seatCushion;
 
   /// Creates an immutable entity containing a unique [id] and a [seatCushion] reference.
-  const SeatCushionEntity({
-    required this.id,
-    required this.seatCushion,
-  });
+  const SeatCushionEntity({required this.id, required this.seatCushion});
 
   factory SeatCushionEntity.fromJson(Map<String, dynamic> json) =>
       _$SeatCushionEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$SeatCushionEntityToJson(this);
-
-  static Map<String, dynamic> _toJson(SeatCushionEntity entity) =>
-      entity.toJson();
 }
 
 /// ------------------------------
@@ -47,15 +41,11 @@ class SeatCushionEntity {
 /// Repository interface for managing seat cushion data.
 abstract class SeatCushionRepository {
   /// Adds a new `SeatCushion` to the repository.
-  Future<bool> add({
-    required SeatCushion seatCushion,
-  });
+  Future<bool> add({required SeatCushion seatCushion});
 
   /// Updates an existing entity or inserts a new one if it doesn’t exist.
-  Future<bool> upsert({
-    required SeatCushionEntity entity,
-  });
-  
+  Future<bool> upsert({required SeatCushionEntity entity});
+
   /// Retrieves the most recently added or updated entity (if any).
   SeatCushionEntity? get lastEntity;
 

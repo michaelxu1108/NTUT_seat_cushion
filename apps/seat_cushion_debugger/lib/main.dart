@@ -28,24 +28,24 @@ late final Initializer initializer;
 /// ============================================
 /// Set this to true to use mock data (no Bluetooth device needed)
 /// Set this to false to use real Bluetooth device
-const bool useMockData = false;
+const bool useMockData = true;
 
 /// ============================================
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Create sensor based on mock mode setting
+  // 根據模擬模式設置創建傳感器
   final SeatCushionSensor sensor;
   bool fbpIsSupported = false;
 
   if (useMockData) {
-    // Use auto-generating mock sensor (no Bluetooth needed)
+    // 使用自動生成的模擬傳感器（無需藍牙）
     sensor = AutoMockSeatCushionSensor();
-    fbpIsSupported = false;
-    print('🎭 Running in MOCK MODE - Using simulated seat cushion data');
+    fbpIsSupported = true;
+    debugPrint(' Running in MOCK MODE - Using simulated seat cushion data');
   } else {
-    // Use real Bluetooth sensor
+    // 使用真正的藍牙傳感器
     try {
       fbpIsSupported = await fbp.FlutterBluePlus.isSupported;
     } catch (e) {
@@ -55,7 +55,7 @@ Future<void> main() async {
       decoder: WeiZheDecoder(),
       fbpIsSupported: fbpIsSupported,
     );
-    print('📡 Running in BLUETOOTH MODE - Connecting to real device');
+    debugPrint(' 在藍牙模式下運行 -連接到真實設備');
   }
 
   initializer = Initializer(
@@ -221,7 +221,9 @@ class MyApp extends StatelessWidget {
                     })) {
                       try {
                         await c.write(controller.text.hexToBytes());
-                      } catch (e) {}
+                      } catch (e) {
+                        // Noting to do.
+                      }
                     }
                   }
                 }
