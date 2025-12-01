@@ -1,0 +1,44 @@
+{
+  "@@locale": "en",
+  "appName": "UTL Amulet App",
+
+  "downloadFileFinishedNotification": "Download {format} file finished.",
+  "@downloadFileButtonText": {
+    "placeholders": {
+      "format": {
+        "type": "String"
+      }
+    }
+  },
+
+  "connectBluetoothButtonText": "Connect",
+  "disconnectBluetoothButtonText": "Disconnect",
+
+  "id": "id",
+  "deviceId": "device ID",
+  "time": "time",
+  "accX": "accX",
+  "accY": "accY",
+  "accZ": "accZ",
+  "accTotal": "accTotal",
+  "gyroX": "gyroX",
+  "gyroY": "gyroY",
+  "gyroZ": "gyroZ",
+  "gyroTotal": "gyroTotal",
+  "magX": "magX",
+  "magY": "magY",
+  "magZ": "magZ",
+  "magTotal": "magTotal",
+  "pitch": "pitch",
+  "roll": "roll",
+  "yaw": "yaw",
+  "gValue": "gValue",
+  "pressure": "pressure",
+  "temperature": "temperature",
+  "posture": "posture",
+  "adc": "adc",
+  "battery": "battery",
+  "area": "area",
+  "step": "step",
+  "direction": "direction"
+}

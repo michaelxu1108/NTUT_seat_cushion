@@ -1,0 +1,50 @@
+name: utl_amulet
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+
+  # Packages
+  bluetooth_presentation: any
+  bluetooth_utils: any
+  common_utils: any
+  file_utils: any
+  line_chart_utils: any
+  path_provider_utils: any
+
+  # External dependencies
+  awesome_dialog: any
+  equatable: any
+  flutter_blue_plus: any
+  flutter_ringtone_player: any
+  fluttertoast: any
+  hive: any
+  hive_flutter: any
+  path_provider: any
+  permission_handler: any
+  provider: any
+  shared_preferences: any
+  syncfusion_flutter_charts: any
+  syncfusion_flutter_xlsio: any
+  synchronized: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+flutter:
+  uses-material-design: true
+
+resolution: workspace

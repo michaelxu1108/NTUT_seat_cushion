@@ -1,0 +1,45 @@
+{
+  "@@locale": "zh",
+
+  "appName": "UTL 平安符 App",
+
+  "downloadFileFinishedNotification": "下载 {format} 完成。",
+  "@downloadFileButtonText": {
+    "placeholders": {
+      "format": {
+        "type": "String"
+      }
+    }
+  },
+
+  "connectBluetoothButtonText": "连接",
+  "disconnectBluetoothButtonText": "断开连接",
+
+  "id": "id",
+  "deviceId": "设备 ID",
+  "time": "时间",
+  "accX": "加速度X",
+  "accY": "加速度Y",
+  "accZ": "加速度Z",
+  "accTotal": "加速度Total",
+  "gyroX": "陀螺仪X",
+  "gyroY": "陀螺仪Y",
+  "gyroZ": "陀螺仪Z",
+  "gyroTotal": "陀螺仪Total",
+  "magX": "磁场X",
+  "magY": "磁场Y",
+  "magZ": "磁场Z",
+  "magTotal": "磁场Total",
+  "pitch": "俯仰角",
+  "roll": "横滚角",
+  "yaw": "偏航角",
+  "gValue": "重力值",
+  "pressure": "气压",
+  "temperature": "温度",
+  "posture": "姿态",
+  "adc": "模数转换",
+  "battery": "电池",
+  "area": "区域",
+  "step": "步数",
+  "direction": "方向"
+}
