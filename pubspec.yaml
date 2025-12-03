@@ -4,6 +4,7 @@ environment:
 workspace:
   - apps/bluetooth_debugger
   - apps/seat_cushion_debugger
+  - apps/utl_amulet
   - apps/virus_detector_cart_controller
   - domains/ad5940
   - domains/electrochemical
@@ -12,10 +13,12 @@ workspace:
   - domains/seat_cushion_presentation/example
   - packages/bluetooth_presentation
   - packages/bluetooth_utils
+  - packages/common_utils
   - packages/data_presentation
   - packages/data_presentation/example
   - packages/data_utils
   - packages/file_utils
+  - packages/line_chart_utils
   - packages/path_provider_utils
   - packages/stream_utils
   - packages/text_editing_controller_utils
@@ -55,6 +58,7 @@ dependency_overrides:
   # ========================================
   equatable: ^2.0.7  # 簡化物件相等性比較（常用於 state management）
   hive: ^2.2.3  # 輕量級 NoSQL 資料庫（本地資料儲存）
+  hive_flutter: ^1.1.0  # Hive Flutter 整合
   shared_preferences: ^2.5.3  # 簡單的鍵值對儲存（設定、偏好）
 
   # ========================================
@@ -120,5 +124,8 @@ dependency_overrides:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  hive_generator: ^2.0.1
   json_serializable: ^6.11.1
   melos: ^7.1.1
+  source_gen: ^4.0.0
+  build: ^4.0.0

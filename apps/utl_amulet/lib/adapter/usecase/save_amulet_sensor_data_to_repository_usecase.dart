@@ -4,12 +4,8 @@ import 'package:utl_amulet/service/data_stream/amulet_sensor_data_stream.dart';
 
 class SaveAmuletSensorDataToRepositoryUsecase {
   final AmuletRepository amuletRepository;
-  SaveAmuletSensorDataToRepositoryUsecase({
-    required this.amuletRepository,
-  });
-  call({
-    required AmuletSensorData data,
-  }) async {
+  SaveAmuletSensorDataToRepositoryUsecase({required this.amuletRepository});
+  Future<Future<bool>> call({required AmuletSensorData data}) async {
     return amuletRepository.upsert(
       entity: AmuletEntity(
         id: await amuletRepository.createId(),
@@ -29,11 +25,13 @@ class SaveAmuletSensorDataToRepositoryUsecase {
         pressure: data.pressure,
         temperature: data.temperature,
         posture: data.posture,
+        beaconRssi: data.beaconRssi,
         adc: data.adc,
         battery: data.battery,
         area: data.area,
         step: data.step,
         direction: data.direction,
+        point: data.point,
       ),
     );
   }

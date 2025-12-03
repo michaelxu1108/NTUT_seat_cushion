@@ -1,13 +1,16 @@
 enum AmuletPostureType {
-  init,
-  sit,
-  stand,
-  lieDown,
-  lieDownRight,
-  lieDownLeft,
-  getDown,
-  failDown,
-  walk,
+  init,           // 0
+  sit,            // 1
+  stand,          // 2
+  lieDown,        // 3
+  lieDownRight,   // 4
+  fallDown,       // 5 (原本 7, 改為 5)
+  getDown,        // 6
+  lieDownLeft,    // 7 (原本 5, 改為 7)
+  reserved,       // 8 (保留)
+  walk,           // 9 (原本 8, 改為 9)
+  tempUnstable,   // 10 (新增)
+  upright,        // 11 (新增)
 }
 
 class AmuletEntity {
@@ -30,14 +33,16 @@ class AmuletEntity {
   final int roll;
   final int yaw;
   // final int gValue;
-  final double pressure;
+  final double pressure;  // 改為 altitude (高度)
   final int temperature;
   final AmuletPostureType posture;
+  final int beaconRssi;  // 新增 [27][28]
   final int adc;
   final int battery;
   final int area;
   final int step;
   final int direction;
+  final int point;  // 新增 [36]
 
   AmuletEntity({
     required this.id,
@@ -62,10 +67,12 @@ class AmuletEntity {
     required this.pressure,
     required this.temperature,
     required this.posture,
+    required this.beaconRssi,
     required this.adc,
     required this.battery,
     required this.area,
     required this.step,
     required this.direction,
+    required this.point,
   });
 }

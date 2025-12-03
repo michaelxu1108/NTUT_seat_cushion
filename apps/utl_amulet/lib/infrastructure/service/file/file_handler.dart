@@ -1,3 +1,4 @@
+import 'package:utl_amulet/l10n/gen_l10n/app_localizations.dart';
 import 'package:utl_amulet/service/file/file_handler.dart';
 import 'package:utl_amulet/domain/entity/amulet_entity.dart';
 import 'package:utl_amulet/infrastructure/source/csv_file/amulet_csv_file.dart';
@@ -13,9 +14,11 @@ class FileHandlerImpl implements FileHandler {
   @override
   Future<bool> downloadAmuletEntitiesFile({
     required Stream<AmuletEntity> fetchEntitiesStream,
+    required AppLocalizations appLocalizations,
   }) async {
     final file = AmuletCsvFile(
       folderPath: amuletFileDownloadFolder,
+      appLocalizations: appLocalizations,
     );
     await file.clearThenGenerateHeader();
     await for(var entity in fetchEntitiesStream) {

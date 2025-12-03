@@ -13,9 +13,7 @@
   "java.project.sourcePaths": [],
   "java.project.referencedLibraries": [],
   "java.server.launchMode": "Standard",
-  "java.import.exclusions": [
-    "**"
-  ],
+  "java.import.exclusions": ["**"],
 
   // ========================================
   // 禁用 Gradle 擴充套件功能
@@ -43,11 +41,11 @@
     "**/build/**": true
   },
   "search.exclude": {
-    "**/android/**": true,
-    "**/ios/**": true,
-    "**/macos/**": true,
-    "**/linux/**": true,
-    "**/windows/**": true,
-    "**/web/**": true
+    "**/android/.gradle/**": true,
+    "**/android/build/**": true,
+    "**/ios/Pods/**": true,
+    "**/ios/build/**": true,
+    "**/.gradle/**": true,
+    "**/build/**": true
   }
 }

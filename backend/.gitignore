@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虛擬環境
+venv/
+ENV/
+env/
+.venv
+
+# 環境變數
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# 測試
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ML 模型（大檔案）
+*.pkl
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# 資料（不要上傳到 Git）
+data/
+datasets/
+*.csv
+*.json
+
+# 日誌
+*.log
+logs/
+
+# macOS
+.DS_Store
+
+# 臨時檔案
+*.tmp
+tmp/

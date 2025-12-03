@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_utils/path_provider_utils.dart';
@@ -17,7 +18,12 @@ import 'package:utl_amulet/init/resource/service/service_resource.dart';
 
 class Initializer {
   Future call() async {
-    FlutterBluePlus.setLogLevel(LogLevel.none);
+    try {
+      FlutterBluePlus.setLogLevel(LogLevel.none);
+    } catch (e) {
+      debugPrint('[INITIALIZER] Warning: Failed to set FlutterBluePlus log level: $e');
+    }
+
     BluetoothResource.bluetoothModule = BluetoothModule();
 
     PathResource.downloadPath = ((await getSystemDownloadDirectory()) ?? (await getApplicationDocumentsDirectory())).absolute.path;

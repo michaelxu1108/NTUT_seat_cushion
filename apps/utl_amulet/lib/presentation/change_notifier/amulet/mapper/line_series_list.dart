@@ -4,9 +4,10 @@ LineSeries<Point<num>, double> _sensorDataDtoToSeries({
   required AmuletSensorData firstData,
   required Iterable<AmuletSensorData> dataList,
   required AmuletLineChartItem item,
+  required AppLocalizations appLocalizations,
 }) {
   return LineSeries<Point, double>(
-    name: amuletLineChartItemToName(item: item),
+    name: amuletLineChartItemToName(item: item, appLocalizations: appLocalizations),
     dataSource: _sensorDataDtoToDataSource(
       dataList: dataList,
       startDateTime: firstData.time,
@@ -24,12 +25,14 @@ LineSeries<Point<num>, double> _sensorDataDtoToSeries({
 List<LineSeries<Point<num>, double>> sensorDataDtoToSeriesList({
   required AmuletSensorData firstData,
   required Iterable<AmuletSensorData> dataList,
+  required AppLocalizations appLocalizations,
 }) {
   if(dataList.isEmpty) return [];
   return AmuletLineChartItem.values.map((item) => _sensorDataDtoToSeries(
     firstData: firstData,
     dataList: dataList,
     item: item,
+    appLocalizations: appLocalizations,
   )).toList();
 }
 
@@ -37,11 +40,13 @@ List<LineSeries<Point<num>, double>> sensorDataDtoToFilteredSeriesList({
   required AmuletSensorData firstData,
   required Iterable<AmuletSensorData> dataList,
   required Iterable<AmuletLineChartItem> items,
+  required AppLocalizations appLocalizations,
 }) {
   if(dataList.isEmpty) return [];
   return items.map((item) => _sensorDataDtoToSeries(
     firstData: firstData,
     dataList: dataList,
     item: item,
+    appLocalizations: appLocalizations,
   )).toList();
 }

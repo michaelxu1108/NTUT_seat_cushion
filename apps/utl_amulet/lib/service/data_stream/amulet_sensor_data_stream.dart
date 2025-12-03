@@ -23,11 +23,13 @@ class AmuletSensorData extends AmuletEntity {
     required super.pressure,
     required super.temperature,
     required super.posture,
+    required super.beaconRssi,
     required super.adc,
     required super.battery,
     required super.area,
     required super.step,
     required super.direction,
+    required super.point,
   }) : super(
     id: 0,
   );

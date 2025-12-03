@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:utl_amulet/l10n/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'amulet_line_chart_change_notifier.dart';
 import 'mapper/mapper.dart';
@@ -14,12 +15,15 @@ class AmuletLineChartFilteredChangeNotifier extends ChangeNotifier {
   }) {
     amuletLineChartManagerChangeNotifier.addListener(notifyListeners);
   }
-  List<LineSeries<Point<num>, double>> createLineSeriesList() {
+  List<LineSeries<Point<num>, double>> createLineSeriesList({
+    required AppLocalizations appLocalizations,
+  }) {
     if(amuletLineChartManagerChangeNotifier.firstData == null) return [];
     return sensorDataDtoToFilteredSeriesList(
       firstData: amuletLineChartManagerChangeNotifier.firstData!,
       dataList: amuletLineChartManagerChangeNotifier.dataList,
       items: items,
+      appLocalizations: appLocalizations,
     );
   }
   @override

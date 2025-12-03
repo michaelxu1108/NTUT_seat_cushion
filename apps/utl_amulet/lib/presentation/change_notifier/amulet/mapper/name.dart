@@ -2,45 +2,46 @@ part of 'mapper.dart';
 
 String amuletLineChartItemToName({
   required AmuletLineChartItem item,
+  required AppLocalizations appLocalizations,
 }) {
   switch (item) {
     case AmuletLineChartItem.accX:
-      return 'Acc X';
+      return appLocalizations.accX;
     case AmuletLineChartItem.accY:
-      return 'Acc Y';
+      return appLocalizations.accY;
     case AmuletLineChartItem.accZ:
-      return 'Acc Z';
+      return appLocalizations.accZ;
     case AmuletLineChartItem.accTotal:
-      return 'Acc Total';
+      return appLocalizations.accTotal;
     case AmuletLineChartItem.magX:
-      return 'Mag X';
+      return appLocalizations.magX;
     case AmuletLineChartItem.magY:
-      return 'Mag Y';
+      return appLocalizations.magY;
     case AmuletLineChartItem.magZ:
-      return 'Mag Z';
+      return appLocalizations.magZ;
     case AmuletLineChartItem.magTotal:
-      return 'Mag Total';
+      return appLocalizations.magTotal;
     case AmuletLineChartItem.pitch:
-      return 'Pitch';
+      return appLocalizations.pitch;
     case AmuletLineChartItem.roll:
-      return 'Roll';
+      return appLocalizations.roll;
     case AmuletLineChartItem.yaw:
-      return 'Yaw';
+      return appLocalizations.yaw;
     case AmuletLineChartItem.pressure:
-      return 'Pressure';
+      return appLocalizations.pressure;
     case AmuletLineChartItem.temperature:
-      return 'Temperature';
+      return appLocalizations.temperature;
     case AmuletLineChartItem.posture:
-      return 'Posture';
+      return appLocalizations.posture;
     case AmuletLineChartItem.adc:
-      return 'ADC';
+      return appLocalizations.adc;
     case AmuletLineChartItem.battery:
-      return 'Battery';
+      return appLocalizations.battery;
     case AmuletLineChartItem.area:
-      return 'Area';
+      return appLocalizations.area;
     case AmuletLineChartItem.step:
-      return 'Step';
+      return appLocalizations.step;
     case AmuletLineChartItem.direction:
-      return 'Direction';
+      return appLocalizations.direction;
   }
 }

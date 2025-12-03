@@ -1,4 +1,5 @@
 import 'package:file_utils/csv/simple_csv_file.dart';
+import 'package:utl_amulet/l10n/gen_l10n/app_localizations.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:utl_amulet/domain/entity/amulet_entity.dart';
 
@@ -17,8 +18,11 @@ class AmuletCsvFile {
 
   final Lock _lock = Lock();
   final SimpleCsvFile _file;
+  final AppLocalizations appLocalizations;
+
   AmuletCsvFile({
     required String folderPath,
+    required this.appLocalizations,
   }) : _file = SimpleCsvFile(
     path: "$folderPath/Amulet_${_generateTimeString()}.csv",
   );
@@ -29,28 +33,30 @@ class AmuletCsvFile {
         await _file.clear(bom: true);
         await _file.writeAsString(
           data: [
-            'ID',
-            'Device ID',
-            'Time',
-            'Acc X',
-            'Acc Y',
-            'Acc Z',
-            'Acc Total',
-            'Mag X',
-            'Mag Y',
-            'Mag Z',
-            'Mag Total',
-            'Pitch',
-            'Roll',
-            'Yaw',
-            'Pressure',
-            'Temperature',
-            'Posture',
-            'ADC',
-            'Battery',
-            'Area',
-            'Step',
-            'Direction',
+            appLocalizations.id,
+            appLocalizations.deviceId,
+            appLocalizations.time,
+            appLocalizations.accX,
+            appLocalizations.accY,
+            appLocalizations.accZ,
+            appLocalizations.accTotal,
+            appLocalizations.magX,
+            appLocalizations.magY,
+            appLocalizations.magZ,
+            appLocalizations.magTotal,
+            appLocalizations.pitch,
+            appLocalizations.roll,
+            appLocalizations.yaw,
+            appLocalizations.pressure,
+            appLocalizations.temperature,
+            appLocalizations.posture,
+            appLocalizations.beaconRssi,
+            appLocalizations.adc,
+            appLocalizations.battery,
+            appLocalizations.area,
+            appLocalizations.step,
+            appLocalizations.direction,
+            appLocalizations.point,
           ],
         );
         return true;
@@ -90,11 +96,13 @@ class AmuletCsvFile {
               entity.pressure.toString(),
               entity.temperature.toString(),
               entity.posture.name,
+              entity.beaconRssi.toString(),
               entity.adc.toString(),
               entity.battery.toString(),
               entity.area.toString(),
               entity.step.toString(),
               entity.direction.toString(),
+              entity.point.toString(),
             ],
           );
         } catch(e) {

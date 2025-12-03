@@ -98,7 +98,16 @@ class BluetoothStatusView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.all(20.0),
           child: ElevatedButton(
-            onPressed: onPressedButton,
+            onPressed: onPressedButton == null ? null : () {
+              // 延遲執行按鈕動作，避免在 build 過程中觸發狀態改變
+              Future.microtask(() {
+                try {
+                  onPressedButton();
+                } catch (e) {
+                  debugPrint('[BluetoothStatusView] Error in onPressedButton: $e');
+                }
+              });
+            },
             child: Text(buttonText),
           ),
         );

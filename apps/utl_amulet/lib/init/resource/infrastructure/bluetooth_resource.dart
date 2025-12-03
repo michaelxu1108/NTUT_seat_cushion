@@ -8,5 +8,15 @@ class BluetoothResource {
   static final List<String> receivedUuids = [
     "6e400003-b5a3-f393-e0a9-e50e24dcca9e",
   ];
-  static late final BluetoothModule bluetoothModule;
+
+  static BluetoothModule? _bluetoothModule;
+  static BluetoothModule get bluetoothModule {
+    if (_bluetoothModule == null) {
+      throw StateError('BluetoothResource not initialized. Call Initializer() first.');
+    }
+    return _bluetoothModule!;
+  }
+  static set bluetoothModule(BluetoothModule value) {
+    _bluetoothModule = value;
+  }
 }

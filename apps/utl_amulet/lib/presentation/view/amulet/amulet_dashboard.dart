@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:utl_amulet/l10n/gen_l10n/app_localizations.dart';
 
 import '../../../service/data_stream/amulet_sensor_data_stream.dart';
 import '../../change_notifier/amulet/amulet_line_chart_change_notifier.dart';
@@ -10,7 +10,6 @@ class _Item extends StatelessWidget {
   final String label;
   final String data;
   const _Item({
-    super.key,
     required this.label,
     required this.data,
   });
@@ -26,6 +25,7 @@ class AmuletDashboard extends StatelessWidget {
   const AmuletDashboard({super.key});
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final sensorData = context.select<AmuletLineChartManagerChangeNotifier, AmuletSensorData?>((m) {
       return (m.isTouched)
         ? m.getSensorDataByX()
@@ -47,7 +47,7 @@ class AmuletDashboard extends StatelessWidget {
             itemCount: AmuletLineChartItem.values.length,
             itemBuilder: (context, index) {
               final item = AmuletLineChartItem.values[index];
-              final yLabel = lineChartManager.getItemName( item: item);
+              final yLabel = lineChartManager.getItemName(item: item, appLocalizations: appLocalizations);
               final yData = (sensorData != null)
                 ? lineChartManager.getData(data: sensorData, item: item).toStringAsFixed(2)
                 : "";

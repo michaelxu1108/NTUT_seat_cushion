@@ -1,0 +1,25 @@
+# 機器學習相關套件
+
+# 基礎科學計算
+numpy==2.3.5
+pandas==2.3.3
+scipy==1.16.3
+
+# 機器學習
+scikit-learn==1.7.2
+xgboost==3.1.1
+
+# 深度學習（可選，視需求安裝）
+# tensorflow==2.15.0
+# torch==2.1.2
+
+# 數據視覺化
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# Jupyter
+jupyter==1.0.0
+ipykernel==6.27.1
+
+# 模型持久化
+joblib==1.3.2

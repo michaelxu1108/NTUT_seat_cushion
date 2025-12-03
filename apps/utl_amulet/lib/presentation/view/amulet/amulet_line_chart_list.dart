@@ -26,25 +26,29 @@ class AmuletLineChartList extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    final lineChartManager = context.read<AmuletLineChartManagerChangeNotifier>();
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        final height = constraints.maxHeight / 2.5;
-        final items = _getItems().toList();
-        return ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) => SizedBox(
-            height: height,
-            child: ChangeNotifierProvider(
-              create: (_) => AmuletLineChartFilteredChangeNotifier(
-                items: [
-                  items.elementAt(index),
-                ],
-                amuletLineChartManagerChangeNotifier: lineChartManager,
+    // 使用 Consumer 而不是 context.read，確保 Provider 已經完全初始化
+    return Consumer<AmuletLineChartManagerChangeNotifier>(
+      builder: (context, lineChartManager, _) {
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            final height = constraints.maxHeight / 2.5;
+            final items = _getItems().toList();
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) => SizedBox(
+                height: height,
+                child: ChangeNotifierProvider(
+                  create: (_) => AmuletLineChartFilteredChangeNotifier(
+                    items: [
+                      items.elementAt(index),
+                    ],
+                    amuletLineChartManagerChangeNotifier: lineChartManager,
+                  ),
+                  child: const AmuletLineChart(),
+                ),
               ),
-              child: const AmuletLineChart(),
-            ),
-          ),
+            );
+          },
         );
       },
     );

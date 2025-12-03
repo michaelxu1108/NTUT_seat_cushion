@@ -34,6 +34,23 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
 
   final _lock = Lock();
 
+  // ============================================
+  // 時間戳記輔助函數
+  // ============================================
+  /// 獲取當前時間戳記字串 (HH:mm:ss.SSS)
+  String _getTimestamp() {
+    final now = DateTime.now();
+    return '${now.hour.toString().padLeft(2, '0')}:'
+        '${now.minute.toString().padLeft(2, '0')}:'
+        '${now.second.toString().padLeft(2, '0')}.'
+        '${now.millisecond.toString().padLeft(3, '0')}';
+  }
+
+  /// 帶時間戳記的 debugPrint
+  void _debugPrintWithTimestamp(String message) {
+    debugPrint('[${_getTimestamp()}] $message');
+  }
+
   @override
   Stream<LeftSeatCushion> get leftStream => _leftController.stream;
 
@@ -44,13 +61,13 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
   @pragma('vm:notify-debugger-on-exception')
   SeatCushionType? valuesToSeatCushionType(List<int> values) {
     if (values.isEmpty) {
-      debugPrint('⚠️ valuesToSeatCushionType: 收到空的數據包');
+      _debugPrintWithTimestamp('⚠️ valuesToSeatCushionType: 收到空的數據包');
       return null;
     }
     final header = values.first & 0xF0;
     if (header == 0x10) return SeatCushionType.right;
     if (header == 0x20) return SeatCushionType.left;
-    debugPrint(
+    _debugPrintWithTimestamp(
       '⚠️ valuesToSeatCushionType: 未知的設備類型 header=0x${header.toRadixString(16)}',
     );
     return null;
@@ -60,14 +77,14 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
   @pragma('vm:notify-debugger-on-exception')
   WeiZheDecoderValuesStage? valuesToStage(List<int> values) {
     if (values.isEmpty) {
-      debugPrint('⚠️ valuesToStage: 收到空的數據包');
+      _debugPrintWithTimestamp('⚠️ valuesToStage: 收到空的數據包');
       return null;
     }
     final stage = values.first & 0x0F;
     if (stage == 0x01) return WeiZheDecoderValuesStage.first;
     if (stage == 0x02) return WeiZheDecoderValuesStage.second;
     if (stage == 0x03) return WeiZheDecoderValuesStage.third;
-    debugPrint('⚠️ valuesToStage: 未知的階段 stage=0x${stage.toRadixString(16)}');
+    _debugPrintWithTimestamp('⚠️ valuesToStage: 未知的階段 stage=0x${stage.toRadixString(16)}');
     return null;
   }
 
@@ -145,7 +162,7 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
         /// 診斷日誌：顯示收到的原始數據
         if (values.isNotEmpty) {
           final header = values.first;
-          debugPrint(
+          _debugPrintWithTimestamp(
             '📦 收到數據包: 長度=${values.length}, header=0x${header.toRadixString(16).padLeft(2, '0')}',
           );
         }
@@ -153,27 +170,27 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
         /// 檢查類型是否有效。
         final type = valuesToSeatCushionType(values);
         if (type == null) {
-          debugPrint('⚠️ 無法識別設備類型，忽略此數據包');
+          _debugPrintWithTimestamp('⚠️ 無法識別設備類型，忽略此數據包');
           return;
         }
 
         /// 檢查階段是否有效。
         final stage = valuesToStage(values);
         if (stage == null) {
-          debugPrint('⚠️ 無法識別階段，忽略此數據包');
+          _debugPrintWithTimestamp('⚠️ 無法識別階段，忽略此數據包');
           return;
         }
 
         /// 檢查長度是否有效。
         final length = stageToLength(stage);
         if (length != values.length) {
-          debugPrint(
+          _debugPrintWithTimestamp(
             '⚠️ 數據長度不符: 期望=$length, 實際=${values.length}, 類型=$type, 階段=$stage',
           );
           return;
         }
 
-        debugPrint('✅ 有效數據包: 類型=$type, 階段=$stage, 長度=${values.length}');
+        _debugPrintWithTimestamp('✅ 有效數據包: 類型=$type, 階段=$stage, 長度=${values.length}');
 
         /// 更新緩衝區。
         _buffer[type]!.update(stage, (_) => values);
@@ -184,14 +201,14 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
         );
 
         if (allStageValuesIsNotEmpty) {
-          debugPrint('🎯 所有階段數據已就緒，開始解碼 $type 座墊數據...');
+          _debugPrintWithTimestamp('🎯 所有階段數據已就緒，開始解碼 $type 座墊數據...');
 
           /// Get the force list.
           final rawForces = valuesToForces(
             _buffer[type]!.values.expand((e) => e!.skip(1)).toList(),
           );
 
-          debugPrint('   解碼後力值數量: ${rawForces.length}');
+          _debugPrintWithTimestamp('   解碼後力值數量: ${rawForces.length}');
 
           /// Map the force list to 2D-list.
           final forces = List.generate(SeatCushion.unitsMaxRow, (row) {
@@ -210,10 +227,10 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
           /// Add the seat cushion data to the corresponding stream.
           switch (type) {
             case SeatCushionType.left:
-              debugPrint('📤 發送左側座墊數據到 stream');
+              _debugPrintWithTimestamp('📤 發送左側座墊數據到 stream');
               _leftController.add(LeftSeatCushion(forces: forces, time: time));
             case SeatCushionType.right:
-              debugPrint('📤 發送右側座墊數據到 stream');
+              _debugPrintWithTimestamp('📤 發送右側座墊數據到 stream');
               _rightController.add(
                 RightSeatCushion(forces: forces, time: time),
               );
@@ -225,12 +242,12 @@ class WeiZheDecoder implements SeatCushionSensorDecoder {
           }
         }
       } catch (e, stackTrace) {
-        debugPrint('❌ 解碼數據時發生錯誤:');
-        debugPrint('   錯誤: $e');
-        debugPrint('   堆疊追蹤: $stackTrace');
-        debugPrint('   數據包長度: ${values.length}');
+        _debugPrintWithTimestamp('❌ 解碼數據時發生錯誤:');
+        _debugPrintWithTimestamp('   錯誤: $e');
+        _debugPrintWithTimestamp('   堆疊追蹤: $stackTrace');
+        _debugPrintWithTimestamp('   數據包長度: ${values.length}');
         if (values.isNotEmpty) {
-          debugPrint(
+          _debugPrintWithTimestamp(
             '   數據包 header: 0x${values.first.toRadixString(16).padLeft(2, '0')}',
           );
         }

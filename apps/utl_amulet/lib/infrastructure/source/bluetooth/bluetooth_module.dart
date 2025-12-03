@@ -11,18 +11,25 @@ class BluetoothModule {
   final Map<String, fbp.BluetoothDevice> _connectedDevices = {};
   final Map<String, List<StreamSubscription>> _deviceSubscriptions = {};
   final StreamController<BluetoothReceivedPacket> _controller = StreamController.broadcast();
-  late final StreamSubscription _connectionStateSubscription;
+  StreamSubscription? _connectionStateSubscription;
 
   BluetoothModule() {
-    // Listen to connection state changes
-    _connectionStateSubscription = fbp.FlutterBluePlus.events.onConnectionStateChanged.listen((event) {
-      final device = event.device;
-      final state = event.connectionState;
+    // 延遲訂閱，使用 Future.microtask 確保在建構子完成後才訂閱
+    Future.microtask(() {
+      try {
+        // Listen to connection state changes
+        _connectionStateSubscription = fbp.FlutterBluePlus.events.onConnectionStateChanged.listen((event) {
+          final device = event.device;
+          final state = event.connectionState;
 
-      if (state == fbp.BluetoothConnectionState.connected) {
-        _onDeviceConnected(device);
-      } else if (state == fbp.BluetoothConnectionState.disconnected) {
-        _onDeviceDisconnected(device);
+          if (state == fbp.BluetoothConnectionState.connected) {
+            _onDeviceConnected(device);
+          } else if (state == fbp.BluetoothConnectionState.disconnected) {
+            _onDeviceDisconnected(device);
+          }
+        });
+      } catch (e) {
+        debugPrint('[BluetoothModule] Warning: Failed to subscribe to connection state changes: $e');
       }
     });
   }
@@ -133,7 +140,7 @@ class BluetoothModule {
   }
 
   void cancel() {
-    _connectionStateSubscription.cancel();
+    _connectionStateSubscription?.cancel();
 
     // Cancel all device subscriptions
     for (final subscriptions in _deviceSubscriptions.values) {

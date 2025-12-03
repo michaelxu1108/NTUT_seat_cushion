@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:utl_amulet/l10n/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -12,16 +13,17 @@ class AmuletLineChart extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
     final item = context.select<AmuletLineChartFilteredChangeNotifier, AmuletLineChartItem>((l) => l.items.first);
     final series = context.select<AmuletLineChartFilteredChangeNotifier, List<LineSeries>>((l) => l.createLineSeriesList(
-      
+      appLocalizations: appLocalizations,
     ));
     final lineChartManager = context.read<AmuletLineChartManagerChangeNotifier>();
     return Column(
       children: [
         Text(lineChartManager.getItemName(
-          
           item: item,
+          appLocalizations: appLocalizations,
         )),
         Expanded(
           child: SfCartesianChart(
