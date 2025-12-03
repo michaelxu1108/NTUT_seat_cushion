@@ -4,13 +4,34 @@ import 'package:bluetooth_presentation/bluetooth_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fbp;
-import 'package:utl_amulet/presentation/view/amulet/amulet_buttons_board.dart';
+import 'package:utl_amulet/l10n/gen_l10n/app_localizations.dart';
+import 'package:utl_amulet/presentation/view/amulet/amulet_control_panel.dart';
 import 'package:utl_amulet/presentation/view/amulet/amulet_dashboard.dart';
 import 'package:utl_amulet/presentation/view/amulet/amulet_line_chart_list.dart';
 import 'package:utl_amulet/presentation/view/bluetooth/bluetooth_scanner_view.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Stream<fbp.BluetoothAdapterState>? _adapterStateStream;
+
+  @override
+  void initState() {
+    super.initState();
+    // 延遲訂閱，確保 FlutterBluePlus 已完全初始化
+    Future.microtask(() {
+      if (mounted) {
+        setState(() {
+          _adapterStateStream = fbp.FlutterBluePlus.adapterState;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +40,17 @@ class HomeScreen extends StatelessWidget {
       DeviceOrientation.landscapeRight,
     ]);
 
+    if (_adapterStateStream == null) {
+      // 在 stream 準備好之前顯示載入畫面
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return StreamBuilder<fbp.BluetoothAdapterState>(
-      stream: fbp.FlutterBluePlus.adapterState,
+      stream: _adapterStateStream,
       initialData: fbp.BluetoothAdapterState.unknown,
       builder: (context, snapshot) {
         final state = snapshot.data;
@@ -35,27 +65,49 @@ class HomeScreen extends StatelessWidget {
           builder: (BuildContext context, BoxConstraints constraints) {
             final mediaQueryData = MediaQuery.of(context);
             final controllerWidth = min(constraints.maxWidth / 3, (constraints.maxWidth - mediaQueryData.viewInsets.horizontal));
+            final appLocalizations = AppLocalizations.of(context)!;
             const bluetoothScannerView = BluetoothScannerView();
             const amuletDashboard = AmuletDashboard();
-            const amuletButtonsBoard = AmuletButtonsBoard();
+            const amuletControlPanel = AmuletControlPanel();
             const amuletLineChartList = AmuletLineChartList();
-            final tabViewMap = {
-              const Icon(Icons.bluetooth_searching_rounded): bluetoothScannerView,
-              const Icon(Icons.list_alt): amuletDashboard,
-            };
+
+            // 定義 Tab 標題和對應的頁面
+            final tabItems = [
+              {'icon': Icons.bluetooth_searching_rounded, 'label': appLocalizations.tabBluetoothScanner, 'view': bluetoothScannerView},
+              {'icon': Icons.list_alt, 'label': appLocalizations.tabDataList, 'view': amuletDashboard},
+              {'icon': Icons.settings_input_antenna, 'label': appLocalizations.tabControlPanel, 'view': amuletControlPanel},
+            ];
+
             final tabBar = TabBar(
               isScrollable: false,
-              tabs: tabViewMap.keys.map((icon) {
+              labelStyle: const TextStyle(fontSize: 9, height: 1.0),
+              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+              indicatorPadding: EdgeInsets.zero,
+              tabs: tabItems.map((item) {
                 return Tab(
-                  icon: icon,
+                  height: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(item['icon'] as IconData, size: 18),
+                      const SizedBox(height: 2),
+                      Text(
+                        item['label'] as String,
+                        style: const TextStyle(fontSize: 9),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             );
             final tabView = TabBarView(
-              children: tabViewMap.values.toList(),
+              children: tabItems.map((item) => item['view'] as Widget).toList(),
             );
             final tabController = DefaultTabController(
-              length: tabViewMap.length,
+              length: tabItems.length,
               child: Scaffold(
                 appBar: tabBar,
                 body: tabView,
@@ -67,8 +119,6 @@ class HomeScreen extends StatelessWidget {
                   const Expanded(
                     child: amuletLineChartList,
                   ),
-                  const VerticalDivider(),
-                  amuletButtonsBoard,
                   const VerticalDivider(),
                   SizedBox(
                     width: controllerWidth,
